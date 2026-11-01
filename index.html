@@ -1158,12 +1158,63 @@
       grid-template-columns: 1fr 1fr;
       gap: 24px;
       margin-bottom: 50px;
+      align-items: stretch;
+    }
+
+    .two-col-section > .card-panel {
+      height: 100%;
+      flex: 1;
     }
 
     @media (max-width: 860px) {
       .two-col-section {
         grid-template-columns: 1fr;
       }
+    }
+
+    /* Horizontal Sliding Quick Navigation Bar (Like JAMB CBT Practice Hub) */
+    .sliding-quick-nav {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      position: sticky;
+      top: 66px;
+      z-index: 95;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px 16px;
+    }
+    .sliding-quick-nav::-webkit-scrollbar {
+      display: none;
+    }
+    .sliding-quick-nav-track {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .quick-nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-offwhite);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .quick-nav-pill:hover, .quick-nav-pill.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
     }
 
     .card-panel {
@@ -1891,6 +1942,19 @@
       </a>
     </div>
   </section>
+
+  <!-- Horizontal Sliding Quick Navigation Bar (Like JAMB CBT Practice Hub) -->
+  <div class="sliding-quick-nav">
+    <div class="sliding-quick-nav-track">
+      <a href="#resources" class="quick-nav-pill active" onclick="setActiveQuickPill(this)">📚 Resource Bank</a>
+      <a href="#upload" class="quick-nav-pill" onclick="setActiveQuickPill(this)">📤 100MB Upload</a>
+      <a href="#assistant" class="quick-nav-pill" onclick="setActiveQuickPill(this)">🤖 AI Assistant</a>
+      <a href="#suggestions" class="quick-nav-pill" onclick="setActiveQuickPill(this)">💬 Suggestions & Tickets</a>
+      <a href="#leadership" class="quick-nav-pill" onclick="setActiveQuickPill(this)">🏛️ Leadership Directory</a>
+      <a href="#excos" class="quick-nav-pill" onclick="setActiveQuickPill(this)">🔐 EXCOS Portal</a>
+      <button type="button" class="quick-nav-pill" onclick="openInstallModal()">📲 Install App / PWA</button>
+    </div>
+  </div>
 
   <!-- Main Container -->
   <main class="container">
@@ -4170,6 +4234,11 @@ For inquiries or grievance escalations, contact your class rep or submit a ticke
       if (backdrop) backdrop.classList.remove('active');
       if (toggle) toggle.innerHTML = '☰';
       document.body.style.overflow = '';
+    }
+
+    function setActiveQuickPill(el) {
+      document.querySelectorAll('.quick-nav-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
     }
 
     let deferredPrompt = null;
