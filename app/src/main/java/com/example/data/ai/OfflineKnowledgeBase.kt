@@ -54,17 +54,18 @@ object OfflineKnowledgeBase {
                     "• **Tracking**: You receive a unique Ticket Number (e.g., `UNM-BA-2025-001`) to check the status and read official EXCOS responses."
         ),
         KnowledgeEntry(
-            title = "EXCOS Administrative Portal and Changing Security PIN",
+            title = "EXCOS Administrative Portal, Security PIN & Logout",
             category = "EXCOS Governance",
-            keywords = listOf("excos", "portal", "pin", "passcode", "admin", "change pin", "reset pin", "handover", "password"),
+            keywords = listOf("excos", "portal", "pin", "passcode", "admin", "change pin", "reset pin", "handover", "password", "logout", "log out", "sign out"),
             answer = "The EXCOS Administrative Portal allows departmental executives to review uploaded study materials, respond to student complaints, and manage courses:\n\n" +
                     "• **Default PIN**: The initial departmental default PIN is `2026` (Master recovery code: `unimaid`).\n" +
                     "• **How to Change PIN**:\n" +
                     "  1. Tap the shield icon in the top header or navigate to the EXCOS Portal.\n" +
                     "  2. On the lock screen, tap **Change EXCOS Portal PIN**, or if already logged in, tap **Change PIN** in the dashboard top bar or under **Handover & Governance**.\n" +
                     "  3. Enter your current PIN (or master code `unimaid`), your new PIN (minimum 4 characters/digits), and confirm.\n" +
-                    "  4. Tap **Save New PIN**. The new PIN is securely saved and takes effect immediately across all sessions.\n" +
-                    "• **Resetting**: If needed, authenticated officers can also tap **Reset to 2026** under the Governance tab."
+                    "  4. Tap **Save New PIN**. The new PIN takes effect immediately.\n" +
+                    "• **How to Log Out**:\n" +
+                    "  Tap the prominent red **Logout** button in the dashboard top navigation bar, or select **Logout of Administrative Session** in the Governance tab. A confirmation dialog will prompt you to confirm session closure, ensuring unauthorized students cannot access executive tools."
         ),
 
 

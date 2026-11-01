@@ -19,10 +19,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.AutoStories
@@ -134,6 +136,7 @@ fun ExcosDashboardScreen(
     var pinConfirm by remember { mutableStateOf("") }
     var pinErrorMessage by remember { mutableStateOf<String?>(null) }
     var showResetPinDialog by remember { mutableStateOf(false) }
+    var showLogoutConfirmDialog by remember { mutableStateOf(false) }
 
     // Dialog states
     var respondingSuggestion by remember { mutableStateOf<SuggestionComplaint?>(null) }
@@ -338,15 +341,23 @@ fun ExcosDashboardScreen(
                             Text("Change PIN", fontSize = 11.sp, color = White)
                         }
 
-                        OutlinedButton(
+                        Button(
                             onClick = {
-                                viewModel.logoutAdmin()
-                                Toast.makeText(context, "Logged out of admin session", Toast.LENGTH_SHORT).show()
+                                showLogoutConfirmDialog = true
                             },
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = White),
-                            shape = RoundedCornerShape(8.dp)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC2626)),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                            modifier = Modifier.testTag("excos_logout_btn")
                         ) {
-                            Text("Lock", fontSize = 11.sp)
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Logout,
+                                contentDescription = "Logout",
+                                modifier = Modifier.size(13.dp),
+                                tint = White
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("Logout", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = White)
                         }
                     }
 
@@ -865,6 +876,32 @@ fun ExcosDashboardScreen(
                                             }
                                         }
                                     }
+
+                                    Spacer(modifier = Modifier.height(10.dp))
+
+                                    OutlinedButton(
+                                        onClick = { showLogoutConfirmDialog = true },
+                                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFDC2626)),
+                                        border = BorderStroke(1.dp, Color(0xFFDC2626)),
+                                        shape = RoundedCornerShape(8.dp),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .testTag("tab4_logout_btn")
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.Logout,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(15.dp),
+                                            tint = Color(0xFFDC2626)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            "Logout of Administrative Session",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFFDC2626)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -1253,6 +1290,55 @@ fun ExcosDashboardScreen(
             dismissButton = {
                 TextButton(onClick = { showResetPinDialog = false }) {
                     Text("Cancel")
+                }
+            }
+        )
+    }
+
+    // Logout Confirmation Dialog
+    if (showLogoutConfirmDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutConfirmDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
+                    contentDescription = "Logout",
+                    tint = Color(0xFFDC2626),
+                    modifier = Modifier.size(28.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "Logout of EXCOS Portal",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = UnimaidNavy
+                )
+            },
+            text = {
+                Text(
+                    text = "Are you sure you want to end your executive session? All administrative privileges will be locked until the EXCOS passcode is re-entered.",
+                    fontSize = 13.sp,
+                    color = TextSecondary,
+                    lineHeight = 18.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showLogoutConfirmDialog = false
+                        viewModel.logoutAdmin()
+                        Toast.makeText(context, "Logged out of EXCOS portal successfully", Toast.LENGTH_SHORT).show()
+                        onNavigateBack()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC2626))
+                ) {
+                    Text("Confirm Logout", color = White, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutConfirmDialog = false }) {
+                    Text("Stay Logged In", color = TextSecondary)
                 }
             }
         )

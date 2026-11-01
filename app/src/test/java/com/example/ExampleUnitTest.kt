@@ -50,6 +50,10 @@ class ExampleUnitTest {
         assertNotNull(pinResult)
         assertTrue(pinResult!!.contains("2026"))
         assertTrue(pinResult!!.contains("Change EXCOS Portal PIN"))
+
+        val logoutResult = OfflineKnowledgeBase.search("How do I logout of the excos portal?")
+        assertNotNull(logoutResult)
+        assertTrue(logoutResult!!.contains("Logout"))
     }
 }
 
