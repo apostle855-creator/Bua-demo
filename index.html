@@ -2775,34 +2775,22 @@
     // ==========================================
     // 1. GITHUB STORAGE INTEGRATION LAYER
     // ==========================================
-    const GITHUB_API_BASE = 'https://api.github.com/repos/apostle855-creator/Bua-demo';
-    const GITHUB_PAT = 'YOUR_GITHUB_PAT'; // WARNING: Security trade-off as requested
+    const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/apostle855-creator/Bua-demo/main';
 
     async function fetchGitHubData(path) {
-      const response = await fetch(`${GITHUB_API_BASE}/contents/${path}`, {
-        headers: { 
-          'Accept': 'application/vnd.github.v3.raw',
-          'Authorization': `token ${GITHUB_PAT}`
-        }
+      const response = await fetch(`${GITHUB_RAW_BASE}/${path}?t=${Date.now()}`, {
+        cache: 'no-cache'
       });
-      if (!response.ok) throw new Error(`GitHub API error: ${response.statusText}`);
+      if (!response.ok) throw new Error(`GitHub fetch error: ${response.statusText}`);
       return await response.json();
     }
 
+    // Submission via GitHub API is not possible without authentication.
+    // As requested to bypass PAT, students must submit via a manual form
+    // that EXCOS manually reviews in Pull Requests.
     async function submitToGitHubWorkflow(payload) {
-      const response = await fetch(`${GITHUB_API_BASE}/dispatches`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `token ${GITHUB_PAT}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          event_type: 'submit-resource',
-          client_payload: payload
-        })
-      });
-      if (!response.ok) throw new Error('Failed to trigger submission workflow');
-      return true;
+      alert("Due to security bypass, direct automated submission is disabled. Please copy your submission data and send it as a Pull Request via GitHub.");
+      return false;
     }
 
     // Retained core functional wrappers for compatibility
@@ -3309,8 +3297,24 @@ Empowering leaders and managers for global impact.
       };
 
       try {
-        await dbPut('pending_uploads', uploadItem);
-        await logAuditAction('Student Upload Submitted', uploaderName, `Submitted ${courseCode} (${docTitle}) [Tracking: ${trackingId}]`);
+        // Generate automated submission URL for GitHub
+        const submissionData = {
+          ...uploadItem,
+          fileBlob: undefined // Cannot store binary in JSON
+        };
+        const jsonData = encodeURIComponent(JSON.stringify(submissionData, null, 2));
+        const fileName = `submissions/${trackingId}.json`;
+        const repo = 'apostle855-creator/Bua-demo';
+        const branch = 'main';
+        const submitUrl = `https://github.com/${repo}/new/${branch}?filename=${fileName}&value=${jsonData}&message=New%20submission%20${trackingId}`;
+
+        // Redirect user to GitHub to automatically commit the file
+        window.open(submitUrl, '_blank');
+        showToast('✓ Please complete the automatic commit on GitHub to finalize your submission.');
+        
+        document.getElementById('studentUploadForm').reset();
+        currentUploadedFile = null;
+        document.getElementById('selectedFileInfo').style.display = 'none';
 
         // Reset form
         document.getElementById('studentUploadForm').reset();
