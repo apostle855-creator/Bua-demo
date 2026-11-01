@@ -2773,63 +2773,49 @@
   <!-- JavaScript for Native Storage (IndexedDB), AI, Moderation & PWA -->
   <script>
     // ==========================================
-    // 1. INDEXEDDB PERSISTENCE LAYER (UnimaidDB)
+    // 1. GITHUB STORAGE INTEGRATION LAYER
     // ==========================================
-    const DB_NAME = 'UNIMAID_BUSADMIN_DB';
-    const DB_VERSION = 2;
-    let dbInstance = null;
+    const GITHUB_API_BASE = 'https://api.github.com/repos/apostle855-creator/Bua-demo';
+    const GITHUB_PAT = 'YOUR_GITHUB_PAT'; // WARNING: Security trade-off as requested
 
-    function openDatabase() {
-      return new Promise((resolve, reject) => {
-        if (dbInstance) {
-          resolve(dbInstance);
-          return;
+    async function fetchGitHubData(path) {
+      const response = await fetch(`${GITHUB_API_BASE}/contents/${path}`, {
+        headers: { 
+          'Accept': 'application/vnd.github.v3.raw',
+          'Authorization': `token ${GITHUB_PAT}`
         }
-        const req = indexedDB.open(DB_NAME, DB_VERSION);
-        req.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('resources')) {
-            db.createObjectStore('resources', { keyPath: 'id' });
-          }
-          if (!db.objectStoreNames.contains('pending_uploads')) {
-            db.createObjectStore('pending_uploads', { keyPath: 'trackingId' });
-          }
-          if (!db.objectStoreNames.contains('recycled_resources')) {
-            db.createObjectStore('recycled_resources', { keyPath: 'id' });
-          }
-          if (!db.objectStoreNames.contains('suggestions')) {
-            db.createObjectStore('suggestions', { keyPath: 'ticketId' });
-          }
-          if (!db.objectStoreNames.contains('reports')) {
-            db.createObjectStore('reports', { keyPath: 'id' });
-          }
-          if (!db.objectStoreNames.contains('leadership')) {
-            db.createObjectStore('leadership', { keyPath: 'role' });
-          }
-          if (!db.objectStoreNames.contains('audit_logs')) {
-            db.createObjectStore('audit_logs', { keyPath: 'id' });
-          }
-          if (!db.objectStoreNames.contains('settings')) {
-            db.createObjectStore('settings', { keyPath: 'key' });
-          }
-        };
-        req.onsuccess = (e) => {
-          dbInstance = e.target.result;
-          resolve(dbInstance);
-        };
-        req.onerror = (e) => reject(e.target.error);
       });
+      if (!response.ok) throw new Error(`GitHub API error: ${response.statusText}`);
+      return await response.json();
     }
 
-    async function dbGetAll(storeName) {
-      const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readonly');
-        const req = tx.objectStore(storeName).getAll();
-        req.onsuccess = () => resolve(req.result || []);
-        req.onerror = () => reject(req.error);
+    async function submitToGitHubWorkflow(payload) {
+      const response = await fetch(`${GITHUB_API_BASE}/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${GITHUB_PAT}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          event_type: 'submit-resource',
+          client_payload: payload
+        })
       });
+      if (!response.ok) throw new Error('Failed to trigger submission workflow');
+      return true;
     }
+
+    // Retained core functional wrappers for compatibility
+    async function dbGetAll(storeName) {
+      try {
+        const data = await fetchGitHubData(`data/${storeName}.json`);
+        return data[storeName] || [];
+      } catch (e) {
+        console.error('Error fetching from GitHub:', e);
+        return [];
+      }
+    }
+
 
     async function dbGet(storeName, key) {
       const db = await openDatabase();

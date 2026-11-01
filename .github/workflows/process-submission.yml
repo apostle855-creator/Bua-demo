@@ -1,0 +1,28 @@
+name: Process Academic Submission
+on:
+  repository_dispatch:
+    types: [submit-resource]
+jobs:
+  process-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Submission Branch
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          SUBMISSION_ID="${{ github.event.client_payload.id }}"
+          git checkout -b submission-$SUBMISSION_ID
+          mkdir -p submissions
+          # Save submission metadata
+          echo '${{ toJSON(github.event.client_payload) }}' > submissions/$SUBMISSION_ID.json
+          git add .
+          git commit -m "New submission: $SUBMISSION_ID"
+          git push origin submission-$SUBMISSION_ID
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "New Academic Submission: ${{ github.event.client_payload.code }}"
+          body: "Review pending submission: ${{ github.event.client_payload.id }}"
+          branch: submission-${{ github.event.client_payload.id }}
+          base: main
