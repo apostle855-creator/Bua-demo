@@ -7,6 +7,15 @@
   <meta name="description" content="Central Academic Resource Platform and EXCOS Portal for the Department of Business Administration, University of Maiduguri (UNIMAID). Past questions, verified lecture notes, 100MB student uploads, AI assistant, and complaints centre.">
   <meta name="theme-color" content="#0B1E36">
   
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://uznuxsdyjbiuagzqmrsp.supabase.co',
+      'sb_publishable_lP0LgHCgwfWtczokQw3ugg_Oru7q6_Y'
+    );
+  </script>
+
   <!-- Progressive Web App (PWA) Manifest & Service Worker -->
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -2794,45 +2803,65 @@
     }
 
     // Retained core functional wrappers for compatibility
-    async function dbGetAll(storeName) {
-      try {
-        const data = await fetchGitHubData(`data/${storeName}.json`);
-        return data[storeName] || [];
-      } catch (e) {
-        console.error('Error fetching from GitHub:', e);
+    // Supabase-backed storage wrappers
+    async function dbGetAll(tableName) {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*');
+      if (error) {
+        console.error(`Error fetching ${tableName}:`, error);
         return [];
       }
+      return data;
     }
 
 
-    async function dbGet(storeName, key) {
-      const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readonly');
-        const req = tx.objectStore(storeName).get(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
+    async function dbGet(tableName, key) {
+      // Determine key field based on table
+      let keyField = 'id';
+      if (tableName === 'pending_uploads') keyField = 'trackingId';
+      if (tableName === 'suggestions') keyField = 'ticketId';
+      if (tableName === 'leadership') keyField = 'role';
+
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*')
+        .eq(keyField, key)
+        .single();
+      if (error) {
+        console.error(`Error fetching ${tableName} with key ${key}:`, error);
+        return null;
+      }
+      return data;
     }
 
-    async function dbPut(storeName, value) {
-      const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readwrite');
-        const req = tx.objectStore(storeName).put(value);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
+    async function dbPut(tableName, value) {
+      const { data, error } = await supabase
+        .from(tableName)
+        .upsert(value);
+      if (error) {
+        console.error(`Error upserting into ${tableName}:`, error);
+        return null;
+      }
+      return data;
     }
 
-    async function dbDelete(storeName, key) {
-      const db = await openDatabase();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readwrite');
-        const req = tx.objectStore(storeName).delete(key);
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
+    async function dbDelete(tableName, key) {
+      // Determine key field based on table
+      let keyField = 'id';
+      if (tableName === 'pending_uploads') keyField = 'trackingId';
+      if (tableName === 'suggestions') keyField = 'ticketId';
+      if (tableName === 'leadership') keyField = 'role';
+
+      const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq(keyField, key);
+      if (error) {
+        console.error(`Error deleting from ${tableName} with key ${key}:`, error);
+        return false;
+      }
+      return true;
     }
 
     async function logAuditAction(action, performedBy, details) {
@@ -2851,117 +2880,18 @@
       const existing = await dbGetAll('resources');
       if (existing.length === 0) {
         const demoSeed = [
-          {
-            id: "res-1",
-            code: "BUS 101",
-            title: "Introduction to Business I - Full Past Exam Series (2020-2025)",
-            level: "100 Level",
-            type: "Past Question",
-            format: "PDF",
-            size: "3.2 MB",
-            date: "2026-02-14",
-            uploader: "Academic Directorate",
-            description: "Official past examination question papers including objective and essay questions for BUS 101 at UNIMAID.",
-            isDemo: true
-          },
-          {
-            id: "res-2",
-            code: "BUS 103",
-            title: "Principles of Management Comprehensive Lecture Notes",
-            level: "100 Level",
-            type: "Lecture Note",
-            format: "PDF",
-            size: "4.8 MB",
-            date: "2026-02-18",
-            uploader: "Course Rep 100L",
-            description: "Lecture notes covering management definitions, scientific school, and organizational hierarchies.",
-            isDemo: true
-          },
-          {
-            id: "res-3",
-            code: "BUS 201",
-            title: "Principles of Management - Henri Fayol & Classical Theory",
-            level: "200 Level",
-            type: "Lecture Note",
-            format: "DOCX",
-            size: "2.5 MB",
-            date: "2026-02-10",
-            uploader: "Dr. K. Mohammed",
-            description: "Complete analytical notes on Fayol's 14 principles of management and Max Weber's bureaucratic model.",
-            isDemo: true
-          },
-          {
-            id: "res-4",
-            code: "BUS 203",
-            title: "Business Mathematics & Statistics Practice Questions",
-            level: "200 Level",
-            type: "Past Question",
-            format: "PDF",
-            size: "5.1 MB",
-            date: "2026-02-22",
-            uploader: "Departmental Tutor",
-            description: "Practice questions covering probability distributions, hypothesis testing, and linear programming.",
-            isDemo: true
-          },
-          {
-            id: "res-5",
-            code: "BUS 301",
-            title: "Organizational Behaviour - Theory & Case Studies",
-            level: "300 Level",
-            type: "Textbook",
-            format: "PDF",
-            size: "18.4 MB",
-            date: "2026-01-30",
-            uploader: "UNIMAID Central Library",
-            description: "Comprehensive textbook on individual dynamics, motivation theories, and organizational change.",
-            isDemo: true
-          },
-          {
-            id: "res-6",
-            code: "BUS 305",
-            title: "Marketing Management - Mid-Semester Assignment Guidelines",
-            level: "300 Level",
-            type: "Assignment",
-            format: "PDF",
-            size: "1.1 MB",
-            date: "2026-02-25",
-            uploader: "Prof. B. Garba",
-            description: "Assignment questions on market segmentation, target marketing, and brand positioning in Northern Nigeria.",
-            isDemo: true
-          },
-          {
-            id: "res-7",
-            code: "BUS 401",
-            title: "Business Policy & Strategic Management - Past Exams (2020-2025)",
-            level: "400 Level",
-            type: "Past Question",
-            format: "PDF",
-            size: "6.7 MB",
-            date: "2026-02-05",
-            uploader: "EXCOS Academic Secretary",
-            description: "Cap-stone past examinations focusing on SWOT analysis, corporate strategy, and competitive advantage.",
-            isDemo: true
-          },
-          {
-            id: "res-8",
-            code: "BUS 403",
-            title: "International Business Strategy - Research Compendium",
-            level: "400 Level",
-            type: "Textbook",
-            format: "PDF",
-            size: "12.3 MB",
-            date: "2026-01-15",
-            uploader: "Faculty Research Unit",
-            description: "Approved academic readings on multinational corporations, exchange rates, and global supply chains.",
-            isDemo: true
-          }
+          { id: "res-1", code: "BUS 101", title: "Introduction to Business I - Full Past Exam Series (2020-2025)", level: "100 Level", type: "Past Question", format: "PDF", size: "3.2 MB", date: "2026-02-14", uploader: "Academic Directorate", description: "Official past examination question papers including objective and essay questions for BUS 101 at UNIMAID.", isDemo: true },
+          { id: "res-2", code: "BUS 103", title: "Principles of Management Comprehensive Lecture Notes", level: "100 Level", type: "Lecture Note", format: "PDF", size: "4.8 MB", date: "2026-02-18", uploader: "Course Rep 100L", description: "Lecture notes covering management definitions, scientific school, and organizational hierarchies.", isDemo: true },
+          { id: "res-3", code: "BUS 201", title: "Principles of Management - Henri Fayol & Classical Theory", level: "200 Level", type: "Lecture Note", format: "DOCX", size: "2.5 MB", date: "2026-02-10", uploader: "Dr. K. Mohammed", description: "Complete analytical notes on Fayol's 14 principles of management and Max Weber's bureaucratic model.", isDemo: true },
+          { id: "res-4", code: "BUS 203", title: "Business Mathematics & Statistics Practice Questions", level: "200 Level", type: "Past Question", format: "PDF", size: "5.1 MB", date: "2026-02-22", uploader: "Departmental Tutor", description: "Practice questions covering probability distributions, hypothesis testing, and linear programming.", isDemo: true },
+          { id: "res-5", code: "BUS 301", title: "Organizational Behaviour - Theory & Case Studies", level: "300 Level", type: "Textbook", format: "PDF", size: "18.4 MB", date: "2026-01-30", uploader: "UNIMAID Central Library", description: "Comprehensive textbook on individual dynamics, motivation theories, and organizational change.", isDemo: true },
+          { id: "res-6", code: "BUS 305", title: "Marketing Management - Mid-Semester Assignment Guidelines", level: "300 Level", type: "Assignment", format: "PDF", size: "1.1 MB", date: "2026-02-25", uploader: "Prof. B. Garba", description: "Assignment questions on market segmentation, target marketing, and brand positioning in Northern Nigeria.", isDemo: true },
+          { id: "res-7", code: "BUS 401", title: "Business Policy & Strategic Management - Past Exams (2020-2025)", level: "400 Level", type: "Past Question", format: "PDF", size: "6.7 MB", date: "2026-02-05", uploader: "EXCOS Academic Secretary", description: "Cap-stone past examinations focusing on SWOT analysis, corporate strategy, and competitive advantage.", isDemo: true },
+          { id: "res-8", code: "BUS 403", title: "International Business Strategy - Research Compendium", level: "400 Level", type: "Textbook", format: "PDF", size: "12.3 MB", date: "2026-01-15", uploader: "Faculty Research Unit", description: "Approved academic readings on multinational corporations, exchange rates, and global supply chains.", isDemo: true }
         ];
-        for (const item of demoSeed) {
-          await dbPut('resources', item);
-        }
+        await dbPut('resources', demoSeed);
       }
 
-      // Initial leadership
       const existingLeaders = await dbGetAll('leadership');
       if (existingLeaders.length === 0) {
         const leaders = [
@@ -2970,11 +2900,9 @@
           { role: "Secretary General", name: "Musa Usman", tenure: "2025/2026", email: "secgen.basa@unimaid.edu.ng", phone: "+234 809 345 6789" },
           { role: "Academic Director", name: "Zainab Mustapha", tenure: "2025/2026", email: "academic.basa@unimaid.edu.ng", phone: "+234 808 456 7890" }
         ];
-        for (const leader of leaders) {
-          await dbPut('leadership', leader);
-        }
+        await dbPut('leadership', leaders);
       }
-
+    }
       // Initial settings (PIN hash/salt or fallback)
       const pinSetting = await dbGet('settings', 'adminPin');
       if (!pinSetting) {
@@ -3297,24 +3225,48 @@ Empowering leaders and managers for global impact.
       };
 
       try {
-        // Generate automated submission URL for GitHub
-        const submissionData = {
-          ...uploadItem,
-          fileBlob: undefined // Cannot store binary in JSON
-        };
-        const jsonData = encodeURIComponent(JSON.stringify(submissionData, null, 2));
-        const fileName = `submissions/${trackingId}.json`;
-        const repo = 'apostle855-creator/Bua-demo';
-        const branch = 'main';
-        const submitUrl = `https://github.com/${repo}/new/${branch}?filename=${fileName}&value=${jsonData}&message=New%20submission%20${trackingId}`;
+      try {
+        if (currentUploadedFile.size > 25 * 1024 * 1024) {
+          showToast('File too large. Maximum size is 25MB.');
+          return;
+        }
 
-        // Redirect user to GitHub to automatically commit the file
-        window.open(submitUrl, '_blank');
-        showToast('✓ Please complete the automatic commit on GitHub to finalize your submission.');
+        // 1. Upload file to Supabase Storage
+        const fileExt = currentUploadedFile.name.split('.').pop();
+        const fileName = `${trackingId}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('bua-documents')
+          .upload(fileName, currentUploadedFile);
+
+        if (uploadError) throw uploadError;
+
+        // 2. Insert metadata into Supabase
+        const { error: dbError } = await supabase
+          .from('pending_uploads')
+          .insert({
+            trackingId: trackingId,
+            code: courseCode,
+            title: docTitle,
+            courseTitle: courseTitle,
+            level: level,
+            type: category,
+            fileName: fileName,
+            uploader: uploaderName,
+            status: 'pending',
+            submittedAt: new Date().toISOString()
+          });
+
+        if (dbError) throw dbError;
+
+        showToast('✓ Submission successful! Tracking ID: ' + trackingId);
         
         document.getElementById('studentUploadForm').reset();
         currentUploadedFile = null;
         document.getElementById('selectedFileInfo').style.display = 'none';
+      } catch (err) {
+        console.error(err);
+        showToast('Upload failed: ' + (err.message || 'Unknown error'));
+      }
 
         // Reset form
         document.getElementById('studentUploadForm').reset();
