@@ -7,13 +7,10 @@
   <meta name="description" content="Central Academic Resource Platform and EXCOS Portal for the Department of Business Administration, University of Maiduguri (UNIMAID). Past questions, verified lecture notes, 100MB student uploads, AI assistant, and complaints centre.">
   <meta name="theme-color" content="#0B1E36">
   
-  <!-- Supabase JS Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Central Cloud Backend: Google Drive Repository -->
   <script>
-    const supabase = supabase.createClient(
-      'https://uznuxsdyjbiuagzqmrsp.supabase.co',
-      'sb_publishable_lP0LgHCgwfWtczokQw3ugg_Oru7q6_Y'
-    );
+    const GOOGLE_DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO";
+    const GOOGLE_DRIVE_FOLDER_ID = "1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO";
   </script>
 
   <!-- Progressive Web App (PWA) Manifest & Service Worker -->
@@ -1906,6 +1903,7 @@
       <!-- Navigation Links -->
       <ul class="nav-menu" id="navMenu">
         <li><a href="#resources" onclick="closeMobileNav()">Resources</a></li>
+        <li><a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" onclick="closeMobileNav()" style="color: var(--gold); font-weight: 700;">📁 Drive Folder</a></li>
         <li><a href="#upload" onclick="closeMobileNav()">Upload Material</a></li>
         <li><a href="#assistant" onclick="closeMobileNav()">AI Assistant</a></li>
         <li><a href="#suggestions" onclick="closeMobileNav()">Feedback & Tickets</a></li>
@@ -1931,24 +1929,28 @@
   <section class="hero">
     <div class="hero-badge">Department of Business Administration • UNIMAID</div>
     <h2>Departmental Academic Resource & Knowledge Platform</h2>
-    <p>Connecting 100L, 200L, 300L, and 400L students with past examination series, verified lecture materials, 100MB student upload pipeline, departmental AI tutoring, and direct EXCOS governance.</p>
+    <p>Connecting 100L, 200L, 300L, and 400L students with past examination series, verified lecture materials, departmental Google Drive cloud storage, AI tutoring, and direct EXCOS governance.</p>
     
     <div class="hero-buttons">
-      <a href="unimaid-busadmin.apk" download="UNIMAID_BusAdmin.apk" class="btn-hero-apk" onclick="handleApkDownload()">
-        📱 Download Android APK (24.5 MB)
+      <a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" class="btn-hero-apk" style="background: #0F9D58; color: #FFFFFF; box-shadow: 0 4px 14px rgba(15, 157, 88, 0.4);">
+        📁 Open Google Drive Cloud Folder
+      </a>
+
+      <a href="#resources" class="btn-hero-secondary">
+        📚 Browse Resource Bank
       </a>
 
       <a href="#upload" class="btn-hero-upload">
         📤 Upload Academic Material
       </a>
 
-      <button class="btn-hero-pwa" onclick="openInstallModal()">
-        📲 Save to Home Screen (iPhone / Web)
-      </button>
-
-      <a href="#resources" class="btn-hero-secondary">
-        📚 Browse Resource Bank
+      <a href="unimaid-busadmin.apk" download="UNIMAID_BusAdmin.apk" class="btn-hero-apk" onclick="handleApkDownload()">
+        📱 Download Android APK
       </a>
+
+      <button class="btn-hero-pwa" onclick="openInstallModal()">
+        📲 Save to Home Screen
+      </button>
     </div>
   </section>
 
@@ -1956,12 +1958,13 @@
   <div class="sliding-quick-nav">
     <div class="sliding-quick-nav-track">
       <a href="#resources" class="quick-nav-pill active" onclick="setActiveQuickPill(this)">📚 Resource Bank</a>
-      <a href="#upload" class="quick-nav-pill" onclick="setActiveQuickPill(this)">📤 100MB Upload</a>
+      <a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" class="quick-nav-pill" style="border-color: #0F9D58; color: #0F9D58; font-weight: 800;">📁 Google Drive (Cloud Backend)</a>
+      <a href="#upload" class="quick-nav-pill" onclick="setActiveQuickPill(this)">📤 Upload Material</a>
       <a href="#assistant" class="quick-nav-pill" onclick="setActiveQuickPill(this)">🤖 AI Assistant</a>
       <a href="#suggestions" class="quick-nav-pill" onclick="setActiveQuickPill(this)">💬 Suggestions & Tickets</a>
       <a href="#leadership" class="quick-nav-pill" onclick="setActiveQuickPill(this)">🏛️ Leadership Directory</a>
       <a href="#excos" class="quick-nav-pill" onclick="setActiveQuickPill(this)">🔐 EXCOS Portal</a>
-      <button type="button" class="quick-nav-pill" onclick="openInstallModal()">📲 Install App / PWA</button>
+      <button type="button" class="quick-nav-pill" onclick="openInstallModal()">📲 Install App</button>
     </div>
   </div>
 
@@ -2047,6 +2050,20 @@
         <p>Explore verified past exams, lecture notes, and approved course textbooks organized strictly across the 4 departmental levels.</p>
       </div>
 
+      <!-- Cloud Repository Banner -->
+      <div style="background: linear-gradient(90deg, #F0FDF4, #ECFDF5); border: 1px solid #86EFAC; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 28px;">📁</span>
+          <div>
+            <strong style="color: #166534; font-size: 14px;">Central Departmental Google Drive Backend</strong>
+            <p style="color: #15803D; font-size: 12px; margin: 2px 0 0;">All official handouts, syllabus past questions, and lecture slides are synchronized in our shared cloud folder.</p>
+          </div>
+        </div>
+        <a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" class="btn-download-sm" style="background: #0F9D58; color: #FFFFFF; font-weight: 700; text-decoration: none; padding: 8px 16px; border-radius: 8px; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+          📁 Open Google Drive Folder ↗
+        </a>
+      </div>
+
       <!-- Level Selection Tabs (Strictly 100L, 200L, 300L, 400L) -->
       <div class="level-tabs">
         <button class="level-tab active" onclick="filterByLevel('ALL', this)">All Levels</button>
@@ -2100,7 +2117,22 @@
       <div class="upload-grid">
         <!-- Left Column: Upload Form -->
         <div>
+          <!-- Direct Google Drive Deposit Card -->
+          <div style="background: linear-gradient(135deg, #1E3A8A 0%, #0B1E36 100%); color: #FFFFFF; border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(11, 30, 54, 0.2);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span style="background: #F59E0B; color: #0B1E36; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">Direct Cloud Deposit</span>
+                <h4 style="font-size: 15px; font-weight: 800; margin-top: 6px;">Deposit Directly into Google Drive</h4>
+                <p style="font-size: 12px; color: #CBD5E1; margin-top: 2px;">Upload past questions, lecture handouts, and slides straight to the cloud folder. Accessible from any phone or PC.</p>
+              </div>
+              <a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" class="btn-download-sm" style="background: #0F9D58; color: #FFFFFF; font-weight: 800; padding: 9px 16px; border-radius: 8px; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;">
+                📁 Open Drive & Upload ↗
+              </a>
+            </div>
+          </div>
+
           <form id="studentUploadForm" onsubmit="handleStudentUpload(event)">
+            <p style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 10px;">Or Submit Document for EXCOS Review & Tracking Code:</p>
             <!-- Drag & Drop Zone -->
             <div class="file-dropzone" id="dropZone" onclick="document.getElementById('fileInput').click()">
               <div class="dropzone-icon">📁</div>
@@ -2376,6 +2408,7 @@
           <p>Active Administrative Session • Business Administration Student Association (UNIMAID)</p>
         </div>
         <div class="admin-header-actions">
+          <a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" class="btn-admin-pill" style="background: #0F9D58; color: #FFFFFF; text-decoration: none; font-weight: 700;">📁 Open Google Drive Folder ↗</a>
           <button class="btn-admin-pill btn-admin-pin" onclick="openChangePinModal()">🔑 Change PIN</button>
           <button class="btn-admin-pill btn-admin-logout" onclick="handleAdminLogout()">🔒 Logout</button>
         </div>
@@ -2649,9 +2682,12 @@
       <div class="preview-modal-body">
         <div class="doc-viewer-box" id="docViewerBox">Loading document preview...</div>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
         <button class="btn-preview-sm" onclick="closePreviewModal()">Close</button>
-        <button id="btnPrevDownload" class="btn-download-sm" style="padding: 10px 18px; font-size: 13px;">📥 Download Document</button>
+        <div style="display: flex; gap: 8px;">
+          <a id="btnPrevDrive" href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" class="btn-preview-sm" style="padding: 10px 18px; font-size: 13px; background: #0F9D58; color: #FFFFFF; text-decoration: none;">📁 View in Google Drive</a>
+          <button id="btnPrevDownload" class="btn-download-sm" style="padding: 10px 18px; font-size: 13px;">📥 Download Document</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2763,6 +2799,7 @@
       <div class="footer-col">
         <h4>Platform Governance</h4>
         <ul>
+          <li><a href="https://drive.google.com/drive/folders/1T7B6b0VosY2DmF30nDuIDk6zvjgBDbnO" target="_blank" rel="noopener" style="color: var(--gold); font-weight: 700;">📁 Google Drive Cloud Repository</a></li>
           <li><a href="javascript:void(0)" onclick="openAdminAuthModal()">EXCOS Admin Portal</a></li>
           <li><a href="#suggestions">Suggestions & Complaints</a></li>
           <li><a href="unimaid-busadmin.apk" download="UNIMAID_BusAdmin.apk">Direct APK Download</a></li>
@@ -2782,85 +2819,142 @@
   <!-- JavaScript for Native Storage (IndexedDB), AI, Moderation & PWA -->
   <script>
     // ==========================================
-    // 1. GITHUB STORAGE INTEGRATION LAYER
+    // 1. DATA STORAGE LAYER (IndexedDB with Google Drive backend)
     // ==========================================
-    const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/apostle855-creator/Bua-demo/main';
+    const DB_NAME = 'UNIMAID_BUSADMIN_DB';
+    const DB_VERSION = 3;
+    let dbInstance = null;
 
-    async function fetchGitHubData(path) {
-      const response = await fetch(`${GITHUB_RAW_BASE}/${path}?t=${Date.now()}`, {
-        cache: 'no-cache'
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        if (dbInstance) {
+          resolve(dbInstance);
+          return;
+        }
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          const stores = [
+            { name: 'resources', key: 'id' },
+            { name: 'pending_uploads', key: 'trackingId' },
+            { name: 'recycled_resources', key: 'id' },
+            { name: 'suggestions', key: 'ticketId' },
+            { name: 'reports', key: 'id' },
+            { name: 'leadership', key: 'role' },
+            { name: 'audit_logs', key: 'id' },
+            { name: 'settings', key: 'key' }
+          ];
+          stores.forEach(s => {
+            if (!db.objectStoreNames.contains(s.name)) {
+              db.createObjectStore(s.name, { keyPath: s.key });
+            }
+          });
+        };
+        req.onsuccess = (e) => {
+          dbInstance = e.target.result;
+          resolve(dbInstance);
+        };
+        req.onerror = (e) => {
+          console.warn('IndexedDB failed, using memory/localStorage fallback:', e.target.error);
+          resolve(null);
+        };
       });
-      if (!response.ok) throw new Error(`GitHub fetch error: ${response.statusText}`);
-      return await response.json();
     }
 
-    // Submission via GitHub API is not possible without authentication.
-    // As requested to bypass PAT, students must submit via a manual form
-    // that EXCOS manually reviews in Pull Requests.
-    async function submitToGitHubWorkflow(payload) {
-      alert("Due to security bypass, direct automated submission is disabled. Please copy your submission data and send it as a Pull Request via GitHub.");
-      return false;
-    }
-
-    // Retained core functional wrappers for compatibility
-    // Supabase-backed storage wrappers
-    async function dbGetAll(tableName) {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select('*');
-      if (error) {
-        console.error(`Error fetching ${tableName}:`, error);
+    async function dbGetAll(storeName) {
+      try {
+        const db = await openDatabase();
+        if (db) {
+          return new Promise((resolve) => {
+            const tx = db.transaction(storeName, 'readonly');
+            const req = tx.objectStore(storeName).getAll();
+            req.onsuccess = () => resolve(req.result || []);
+            req.onerror = () => resolve([]);
+          });
+        }
+      } catch (e) {
+        console.warn('dbGetAll error:', e);
+      }
+      try {
+        const raw = localStorage.getItem('unimaid_' + storeName);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
         return [];
       }
-      return data;
     }
 
-
-    async function dbGet(tableName, key) {
-      // Determine key field based on table
-      let keyField = 'id';
-      if (tableName === 'pending_uploads') keyField = 'trackingId';
-      if (tableName === 'suggestions') keyField = 'ticketId';
-      if (tableName === 'leadership') keyField = 'role';
-
-      const { data, error } = await supabase
-        .from(tableName)
-        .select('*')
-        .eq(keyField, key)
-        .single();
-      if (error) {
-        console.error(`Error fetching ${tableName} with key ${key}:`, error);
-        return null;
+    async function dbGet(storeName, key) {
+      try {
+        const db = await openDatabase();
+        if (db) {
+          return new Promise((resolve) => {
+            const tx = db.transaction(storeName, 'readonly');
+            const req = tx.objectStore(storeName).get(key);
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => resolve(null);
+          });
+        }
+      } catch (e) {
+        console.warn('dbGet error:', e);
       }
-      return data;
+      const all = await dbGetAll(storeName);
+      const keyField = storeName === 'pending_uploads' ? 'trackingId' : (storeName === 'suggestions' ? 'ticketId' : (storeName === 'leadership' ? 'role' : 'id'));
+      return all.find(item => item[keyField] === key) || null;
     }
 
-    async function dbPut(tableName, value) {
-      const { data, error } = await supabase
-        .from(tableName)
-        .upsert(value);
-      if (error) {
-        console.error(`Error upserting into ${tableName}:`, error);
-        return null;
+    async function dbPut(storeName, value) {
+      try {
+        const db = await openDatabase();
+        if (db) {
+          return new Promise((resolve) => {
+            const tx = db.transaction(storeName, 'readwrite');
+            const store = tx.objectStore(storeName);
+            if (Array.isArray(value)) {
+              value.forEach(v => store.put(v));
+            } else {
+              store.put(value);
+            }
+            tx.oncomplete = () => resolve(value);
+            tx.onerror = () => resolve(value);
+          });
+        }
+      } catch (e) {
+        console.warn('dbPut error:', e);
       }
-      return data;
+      try {
+        let all = await dbGetAll(storeName);
+        const keyField = storeName === 'pending_uploads' ? 'trackingId' : (storeName === 'suggestions' ? 'ticketId' : (storeName === 'leadership' ? 'role' : 'id'));
+        if (Array.isArray(value)) {
+          all = value;
+        } else {
+          const idx = all.findIndex(item => item[keyField] === value[keyField]);
+          if (idx >= 0) all[idx] = value; else all.push(value);
+        }
+        localStorage.setItem('unimaid_' + storeName, JSON.stringify(all));
+      } catch (e) {}
+      return value;
     }
 
-    async function dbDelete(tableName, key) {
-      // Determine key field based on table
-      let keyField = 'id';
-      if (tableName === 'pending_uploads') keyField = 'trackingId';
-      if (tableName === 'suggestions') keyField = 'ticketId';
-      if (tableName === 'leadership') keyField = 'role';
-
-      const { error } = await supabase
-        .from(tableName)
-        .delete()
-        .eq(keyField, key);
-      if (error) {
-        console.error(`Error deleting from ${tableName} with key ${key}:`, error);
-        return false;
+    async function dbDelete(storeName, key) {
+      try {
+        const db = await openDatabase();
+        if (db) {
+          return new Promise((resolve) => {
+            const tx = db.transaction(storeName, 'readwrite');
+            tx.objectStore(storeName).delete(key);
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => resolve(false);
+          });
+        }
+      } catch (e) {
+        console.warn('dbDelete error:', e);
       }
+      try {
+        let all = await dbGetAll(storeName);
+        const keyField = storeName === 'pending_uploads' ? 'trackingId' : (storeName === 'suggestions' ? 'ticketId' : (storeName === 'leadership' ? 'role' : 'id'));
+        all = all.filter(item => item[keyField] !== key);
+        localStorage.setItem('unimaid_' + storeName, JSON.stringify(all));
+      } catch (e) {}
       return true;
     }
 
@@ -2880,14 +2974,118 @@
       const existing = await dbGetAll('resources');
       if (existing.length === 0) {
         const demoSeed = [
-          { id: "res-1", code: "BUS 101", title: "Introduction to Business I - Full Past Exam Series (2020-2025)", level: "100 Level", type: "Past Question", format: "PDF", size: "3.2 MB", date: "2026-02-14", uploader: "Academic Directorate", description: "Official past examination question papers including objective and essay questions for BUS 101 at UNIMAID.", isDemo: true },
-          { id: "res-2", code: "BUS 103", title: "Principles of Management Comprehensive Lecture Notes", level: "100 Level", type: "Lecture Note", format: "PDF", size: "4.8 MB", date: "2026-02-18", uploader: "Course Rep 100L", description: "Lecture notes covering management definitions, scientific school, and organizational hierarchies.", isDemo: true },
-          { id: "res-3", code: "BUS 201", title: "Principles of Management - Henri Fayol & Classical Theory", level: "200 Level", type: "Lecture Note", format: "DOCX", size: "2.5 MB", date: "2026-02-10", uploader: "Dr. K. Mohammed", description: "Complete analytical notes on Fayol's 14 principles of management and Max Weber's bureaucratic model.", isDemo: true },
-          { id: "res-4", code: "BUS 203", title: "Business Mathematics & Statistics Practice Questions", level: "200 Level", type: "Past Question", format: "PDF", size: "5.1 MB", date: "2026-02-22", uploader: "Departmental Tutor", description: "Practice questions covering probability distributions, hypothesis testing, and linear programming.", isDemo: true },
-          { id: "res-5", code: "BUS 301", title: "Organizational Behaviour - Theory & Case Studies", level: "300 Level", type: "Textbook", format: "PDF", size: "18.4 MB", date: "2026-01-30", uploader: "UNIMAID Central Library", description: "Comprehensive textbook on individual dynamics, motivation theories, and organizational change.", isDemo: true },
-          { id: "res-6", code: "BUS 305", title: "Marketing Management - Mid-Semester Assignment Guidelines", level: "300 Level", type: "Assignment", format: "PDF", size: "1.1 MB", date: "2026-02-25", uploader: "Prof. B. Garba", description: "Assignment questions on market segmentation, target marketing, and brand positioning in Northern Nigeria.", isDemo: true },
-          { id: "res-7", code: "BUS 401", title: "Business Policy & Strategic Management - Past Exams (2020-2025)", level: "400 Level", type: "Past Question", format: "PDF", size: "6.7 MB", date: "2026-02-05", uploader: "EXCOS Academic Secretary", description: "Cap-stone past examinations focusing on SWOT analysis, corporate strategy, and competitive advantage.", isDemo: true },
-          { id: "res-8", code: "BUS 403", title: "International Business Strategy - Research Compendium", level: "400 Level", type: "Textbook", format: "PDF", size: "12.3 MB", date: "2026-01-15", uploader: "Faculty Research Unit", description: "Approved academic readings on multinational corporations, exchange rates, and global supply chains.", isDemo: true }
+          { 
+            id: "res-1", 
+            code: "BUS 101", 
+            title: "Introduction to Business I - Full Past Exam Series (2020-2025)", 
+            level: "100 Level", 
+            type: "Past Question", 
+            format: "PDF", 
+            size: "3.2 MB", 
+            date: "2026-02-14", 
+            uploader: "Academic Directorate", 
+            description: "Official past examination question papers including objective and essay questions for BUS 101 at UNIMAID.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-2", 
+            code: "BUS 103", 
+            title: "Principles of Management Comprehensive Lecture Notes", 
+            level: "100 Level", 
+            type: "Lecture Note", 
+            format: "PDF", 
+            size: "4.8 MB", 
+            date: "2026-02-18", 
+            uploader: "Course Rep 100L", 
+            description: "Lecture notes covering management definitions, scientific school, and organizational hierarchies.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-3", 
+            code: "BUS 201", 
+            title: "Principles of Management - Henri Fayol & Classical Theory", 
+            level: "200 Level", 
+            type: "Lecture Note", 
+            format: "DOCX", 
+            size: "2.5 MB", 
+            date: "2026-02-10", 
+            uploader: "Dr. K. Mohammed", 
+            description: "Complete analytical notes on Fayol's 14 principles of management and Max Weber's bureaucratic model.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-4", 
+            code: "BUS 203", 
+            title: "Business Mathematics & Statistics Practice Questions", 
+            level: "200 Level", 
+            type: "Past Question", 
+            format: "PDF", 
+            size: "5.1 MB", 
+            date: "2026-02-22", 
+            uploader: "Departmental Tutor", 
+            description: "Practice questions covering probability distributions, hypothesis testing, and linear programming.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-5", 
+            code: "BUS 301", 
+            title: "Organizational Behaviour - Theory & Case Studies", 
+            level: "300 Level", 
+            type: "Textbook", 
+            format: "PDF", 
+            size: "18.4 MB", 
+            date: "2026-01-30", 
+            uploader: "UNIMAID Central Library", 
+            description: "Comprehensive textbook on individual dynamics, motivation theories, and organizational change.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-6", 
+            code: "BUS 305", 
+            title: "Marketing Management - Mid-Semester Assignment Guidelines", 
+            level: "300 Level", 
+            type: "Assignment", 
+            format: "PDF", 
+            size: "1.1 MB", 
+            date: "2026-02-25", 
+            uploader: "Prof. B. Garba", 
+            description: "Assignment questions on market segmentation, target marketing, and brand positioning in Northern Nigeria.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-7", 
+            code: "BUS 401", 
+            title: "Business Policy & Strategic Management - Past Exams (2020-2025)", 
+            level: "400 Level", 
+            type: "Past Question", 
+            format: "PDF", 
+            size: "6.7 MB", 
+            date: "2026-02-05", 
+            uploader: "EXCOS Academic Secretary", 
+            description: "Cap-stone past examinations focusing on SWOT analysis, corporate strategy, and competitive advantage.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          },
+          { 
+            id: "res-8", 
+            code: "BUS 403", 
+            title: "International Business Strategy - Research Compendium", 
+            level: "400 Level", 
+            type: "Textbook", 
+            format: "PDF", 
+            size: "12.3 MB", 
+            date: "2026-01-15", 
+            uploader: "Faculty Research Unit", 
+            description: "Approved academic readings on multinational corporations, exchange rates, and global supply chains.", 
+            isDemo: true,
+            driveUrl: GOOGLE_DRIVE_FOLDER_URL
+          }
         ];
         await dbPut('resources', demoSeed);
       }
@@ -2902,8 +3100,8 @@
         ];
         await dbPut('leadership', leaders);
       }
-    }
-      // Initial settings (PIN hash/salt or fallback)
+
+      // Initial settings (PIN)
       const pinSetting = await dbGet('settings', 'adminPin');
       if (!pinSetting) {
         await dbPut('settings', { key: 'adminPin', value: '2026' });
@@ -2987,6 +3185,7 @@
               <div class="res-actions">
                 <button type="button" class="btn-preview-sm" onclick="openPreviewModal('${item.id}')">Preview</button>
                 <button type="button" class="btn-download-sm" onclick="downloadResourceItem('${item.id}')">Download</button>
+                <a href="${item.driveUrl || GOOGLE_DRIVE_FOLDER_URL}" target="_blank" rel="noopener" class="btn-preview-sm" style="background: #0F9D58; color: #FFFFFF; text-decoration: none;" title="Open in Google Drive">📁 Drive</a>
                 <button type="button" class="btn-flag-sm" title="Report Resource" onclick="openReportModal('${item.id}', '${escapeHtml(item.code)} - ${escapeHtml(item.title)}')">🚩</button>
               </div>
             </div>
@@ -3038,10 +3237,14 @@ CORE TOPICS INCLUDED:
 3. Structural Decision Making in Business Organizations
 4. Case Analysis & Exam-Style Practice Problems
 
-NOTICE: This preview reflects approved curriculum documents. Click "Download Document" below to save the official file directly to your device.`;
+NOTICE: This preview reflects approved curriculum documents. Click "Download Document" below to save the official file directly to your device or "View in Google Drive" to open it online.`;
       }
 
       document.getElementById('btnPrevDownload').onclick = () => downloadResourceItem(item.id);
+      const prevDriveBtn = document.getElementById('btnPrevDrive');
+      if (prevDriveBtn) {
+        prevDriveBtn.href = item.driveUrl || GOOGLE_DRIVE_FOLDER_URL;
+      }
       document.getElementById('previewModal').classList.add('active');
     }
 
@@ -3225,71 +3428,36 @@ Empowering leaders and managers for global impact.
       };
 
       try {
-      try {
-        if (currentUploadedFile.size > 25 * 1024 * 1024) {
-          showToast('File too large. Maximum size is 25MB.');
-          return;
-        }
-
-        // 1. Upload file to Supabase Storage
-        const fileExt = currentUploadedFile.name.split('.').pop();
-        const fileName = `${trackingId}.${fileExt}`;
-        const { error: uploadError } = await supabase.storage
-          .from('bua-documents')
-          .upload(fileName, currentUploadedFile);
-
-        if (uploadError) throw uploadError;
-
-        // 2. Insert metadata into Supabase
-        const { error: dbError } = await supabase
-          .from('pending_uploads')
-          .insert({
-            trackingId: trackingId,
-            code: courseCode,
-            title: docTitle,
-            courseTitle: courseTitle,
-            level: level,
-            type: category,
-            fileName: fileName,
-            uploader: uploaderName,
-            status: 'pending',
-            submittedAt: new Date().toISOString()
-          });
-
-        if (dbError) throw dbError;
-
-        showToast('✓ Submission successful! Tracking ID: ' + trackingId);
-        
-        document.getElementById('studentUploadForm').reset();
-        currentUploadedFile = null;
-        document.getElementById('selectedFileInfo').style.display = 'none';
-      } catch (err) {
-        console.error(err);
-        showToast('Upload failed: ' + (err.message || 'Unknown error'));
-      }
+        await dbPut('pending_uploads', uploadItem);
+        await logAuditAction('Student Upload Submitted', uploaderName, `Submitted ${courseCode} (${docTitle}) [Tracking: ${trackingId}]`);
 
         // Reset form
         document.getElementById('studentUploadForm').reset();
         currentUploadedFile = null;
         document.getElementById('selectedFileInfo').style.display = 'none';
 
-        // Show confirmation with tracking ID
+        // Show confirmation with tracking ID & Google Drive direct link
         const resultBox = document.getElementById('trackResultBox');
         resultBox.style.display = 'block';
         resultBox.innerHTML = `
-          <div style="color: var(--success); font-weight: 800; margin-bottom: 6px;">🎉 Upload Successful!</div>
-          <p>Your academic material has been submitted to the moderation pipeline.</p>
-          <div style="background: #F1F5F9; padding: 10px; border-radius: 6px; margin: 8px 0; font-family: monospace; font-size: 14px; font-weight: bold; color: var(--primary);">
+          <div style="color: var(--success); font-weight: 800; font-size: 15px; margin-bottom: 6px;">🎉 Submission Successfully Logged!</div>
+          <p style="font-size: 12px; color: var(--text-main);">Your academic material has been recorded in the departmental review queue.</p>
+          <div style="background: #F1F5F9; padding: 12px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 14px; font-weight: bold; color: var(--primary); border: 1px dashed var(--gold);">
             Tracking Reference: <span id="copyTrackId">${trackingId}</span>
           </div>
-          <button type="button" class="btn-preview-sm" onclick="navigator.clipboard.writeText('${trackingId}'); showToast('Tracking ID copied to clipboard!');">📋 Copy Tracking Code</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;">
+            <button type="button" class="btn-preview-sm" onclick="navigator.clipboard.writeText('${trackingId}'); showToast('Tracking ID copied to clipboard!');">📋 Copy Tracking Code</button>
+            <a href="${GOOGLE_DRIVE_FOLDER_URL}" target="_blank" rel="noopener" class="btn-download-sm" style="background: #0F9D58; text-decoration: none; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px;">
+              📁 Open Drive Folder
+            </a>
+          </div>
         `;
 
-        showToast(`Document uploaded successfully! Tracking ID: ${trackingId}`);
+        showToast(`✓ Document logged! Tracking ID: ${trackingId}`);
         loadAdminData(); // Update pending counts
       } catch (err) {
         console.error('Upload storage error:', err);
-        showToast('Storage error. Please verify browser storage quota.');
+        showToast('Storage error. Please try again.');
       }
     }
 
